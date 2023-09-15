@@ -1,0 +1,43 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: tap-pokemon
+default_environment: test
+environments:
+- name: test
+plugins:
+  extractors:
+  - name: tap-pokemon
+    namespace: tap_pokemon
+    pip_url: -e .
+    capabilities:
+    - state
+    - catalog
+    - discover
+    - about
+    - stream-maps
+    settings:
+    - name: username
+    - name: password
+      kind: password
+    - name: start_date
+      value: '2010-01-01T00:00:00Z'
+    config:
+      start_date: '2010-01-01T00:00:00Z'
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl
+  - name: target-csv
+    variant: hotgluexyz
+    pip_url: git+https://github.com/hotgluexyz/target-csv.git
+    config:
+      quotechar: '"'
+  - name: target-postgres
+    variant: meltanolabs
+    pip_url: meltanolabs-target-postgres~=0.0.7
+    config:
+      add_record_metadata: true
+      database: postgres
+      default_target_schema: public
+      host: localhost
+      user: postgres
